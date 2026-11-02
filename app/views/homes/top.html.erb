@@ -1,0 +1,114 @@
+<% if authenticated? %>
+  <div class="container px-5 px-sm-0 mt-4">
+    <div class="row">
+      <!-- 左側：ユーザー情報と新規投稿フォーム -->
+      <div class="col-md-3">
+       <h2>User info</h2>
+
+        <%= image_tag @user.get_profile_image(100, 100) %>
+
+        <table class="table">
+          <tbody>
+            <tr>
+              <th>name</th>
+              <td><%= @user.name %></td>
+            </tr>
+            <tr>
+               <th>introduction</th>
+               <td><%= @user.introduction %></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- プロフィール編集ボタン -->
+        <div class="mb-3">
+        <%= link_to edit_user_path(@user),
+            class: "btn btn-outline-secondary w-100 profile-edit-btn",
+            title: "プロフィール編集",
+            aria: { label: "プロフィール編集" } do %>
+          <i class="fa-solid fa-user-gear"></i>
+        <% end %>
+      </div>
+        
+      <h2>New book</h2>
+
+        <%= form_with model: @book do |f| %>
+          <div class="mb-3">
+            <%= f.label :title, "Title" %>
+            <%= f.text_field :title, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :body, "Opinion" %>
+            <%= f.text_area :body, class: "form-control" %>
+          </div>
+
+          <%= f.submit "Create Book", class: "btn btn-success" %>
+       <% end %>
+    </div>
+
+      <!-- 右側：Books一覧 -->
+      <div class="col-md-8 offset-md-1">
+        <h2>Books</h2>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Title</th>
+              <th>Opinion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @books.each do |book| %>
+              <tr>
+                <td>
+                  <%= link_to user_path(book.user) do %>
+                    <%= image_tag book.user.get_profile_image(50, 50) %>
+                  <% end %>
+                </td>
+                <td><%= link_to book.title, book_path(book) %></td>
+                <td><%= book.body %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<% else %>
+  <!-- ログイン前の画面 -->
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-8 offset-md-1">
+        <h1>
+          welcome to <i class="fa-solid fa-book"></i><strong>Bookers</strong> !!
+        </h1>
+
+        <p>
+          In <i class="fa-solid fa-book"></i><strong>Bookers</strong>,
+        </p>
+
+        <p>
+          you can share and exchange your opinions, impressions, and emotions
+        </p>
+
+        <p>
+          about various books!
+        </p>
+
+        <div class="row mt-4">
+          <div class="col-10 mx-auto">
+            <%= link_to "Log in", new_session_path,
+                class: "btn btn-info text-white w-100 mb-3" %>
+
+            <%= link_to "Sign up", new_user_path,
+                class: "btn btn-success w-100" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
